@@ -12,17 +12,24 @@ export class App extends Component {
   };
 
   addContact = (name, number) => {
-    for (const item of this.state.contacts) {
-      if (item.name.toLowerCase() === name.toLowerCase())
-        return window.alert(`${name} is already in contacts`);
-    }
-
+    let checkName = this.state.contacts.some(item => item.name.toLowerCase() === name.toLowerCase())
+    let checkNumber = this.state.contacts.some(item => {
+      let stateNumber = parseInt(item.number.replace(/[^\d]/g, ""));
+      let newNumber = parseInt(number.replace(/[^\d]/g, ""));
+      return stateNumber === newNumber;
+    })
+    
+    if (checkName)
+      return window.alert(`${name} is already in contacts`);
+    if (checkNumber)
+      return window.alert(`${number} is already in contacts`);
+    
     const contact = {
       id: nanoid(),
       name,
       number,
     };
-    // PrevState = contacts; ...PrevState.contacts = ...contacts
+
     this.setState(({ contacts }) => ({
       contacts: [...contacts, contact],
     }));
